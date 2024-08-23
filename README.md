@@ -46,10 +46,10 @@ HireKaro is a job portal designed to connect students with potential employers. 
 - Create a `.env` file in the root directory.
 - Add the following environment variables to your `.env` file:
 
-```plaintext
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+   ```plaintext
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+  VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 
 
 ## Usage
