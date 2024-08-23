@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { Button } from "./ui/button";
 import {
   SignedIn,
   SignedOut,
-  UserButton,
   SignIn,
+  UserButton,
   useUser,
 } from "@clerk/clerk-react";
-import { Button } from "./ui/button";
 import { BriefcaseBusiness, Heart, PenBox } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const [showSignIn, setShowSignIn] = useState(false);
@@ -32,8 +32,8 @@ const Header = () => {
   return (
     <>
       <nav className="py-4 flex justify-between items-center">
-        <Link to="/">
-          <h1 className="text-4xl font-extrabold">HireKaro</h1>
+        <Link>
+          <img src="/logo.png" className="h-20" />
         </Link>
 
         <div className="flex gap-8">
@@ -69,7 +69,6 @@ const Header = () => {
                   labelIcon={<Heart size={15} />}
                   href="/saved-jobs"
                 />
-                <UserButton.Action label="manageAccount" />
               </UserButton.MenuItems>
             </UserButton>
           </SignedIn>

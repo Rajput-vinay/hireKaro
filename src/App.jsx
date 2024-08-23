@@ -1,18 +1,15 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import React, { Suspense } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./App.css";
 import AppLayout from "./layouts/app-layout";
+import LandingPage from "./pages/landing";
+import Onboarding from "./pages/onboarding";
+import JobListing from "./pages/job-listing";
+import JobPage from "./pages/job";
+import PostJob from "./pages/post-job";
+import SavedJobs from "./pages/saved-job";
+import MyJobs from "./pages/my-jobs";
 import { ThemeProvider } from "./components/theme-provider";
 import ProtectedRoute from "./components/protected-route";
-import "./App.css";
-
-// Lazy load components
-const LandingPage = React.lazy(() => import("./pages/landing"));
-const Onboarding = React.lazy(() => import("./pages/onboarding"));
-const PostJob = React.lazy(() => import("./pages/post-job"));
-const JobListing = React.lazy(() => import("./pages/jobListing"));
-const MyJobs = React.lazy(() => import("./pages/my-jobs"));
-const SavedJobs = React.lazy(() => import("./pages/saved-jobs"));
-const JobPage = React.lazy(() => import("./pages/job"));
 
 const router = createBrowserRouter([
   {
@@ -20,19 +17,13 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <LandingPage />
-          </Suspense>
-        ),
+        element: <LandingPage />,
       },
       {
         path: "/onboarding",
         element: (
           <ProtectedRoute>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Onboarding />
-            </Suspense>
+            <Onboarding />
           </ProtectedRoute>
         ),
       },
@@ -40,39 +31,7 @@ const router = createBrowserRouter([
         path: "/jobs",
         element: (
           <ProtectedRoute>
-            <Suspense fallback={<div>Loading...</div>}>
-              <JobListing />
-            </Suspense>
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/post-job",
-        element: (
-          <ProtectedRoute>
-            <Suspense fallback={<div>Loading...</div>}>
-              <PostJob />
-            </Suspense>
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/my-jobs",
-        element: (
-          <ProtectedRoute>
-            <Suspense fallback={<div>Loading...</div>}>
-              <MyJobs />
-            </Suspense>
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/saved-jobs",
-        element: (
-          <ProtectedRoute>
-            <Suspense fallback={<div>Loading...</div>}>
-              <SavedJobs />
-            </Suspense>
+            <JobListing />
           </ProtectedRoute>
         ),
       },
@@ -80,9 +39,31 @@ const router = createBrowserRouter([
         path: "/job/:id",
         element: (
           <ProtectedRoute>
-            <Suspense fallback={<div>Loading...</div>}>
-              <JobPage />
-            </Suspense>
+            <JobPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/post-job",
+        element: (
+          <ProtectedRoute>
+            <PostJob />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/saved-jobs",
+        element: (
+          <ProtectedRoute>
+            <SavedJobs />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/my-jobs",
+        element: (
+          <ProtectedRoute>
+            <MyJobs />
           </ProtectedRoute>
         ),
       },

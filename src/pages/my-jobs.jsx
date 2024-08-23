@@ -17,6 +17,7 @@ const MyJobs = () => {
           ? "My Applications"
           : "My Jobs"}
       </h1>
+
       {user?.unsafeMetadata?.role === "candidate" ? (
         <CreatedApplications />
       ) : (

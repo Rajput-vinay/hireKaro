@@ -1,6 +1,6 @@
 import { getSingleJob, updateHiringStatus } from "@/api/apiJobs";
 import ApplicationCard from "@/components/application-card";
-import { ApplyJobDrawer } from "@/components/apply-job";
+import ApplyJobDrawer from "@/components/apply-job";
 import {
   Select,
   SelectContent,
@@ -17,8 +17,8 @@ import { useParams } from "react-router-dom";
 import { BarLoader } from "react-spinners";
 
 const JobPage = () => {
-  const { id } = useParams();
   const { isLoaded, user } = useUser();
+  const { id } = useParams();
 
   const {
     loading: loadingJob,
@@ -27,10 +27,6 @@ const JobPage = () => {
   } = useFetch(getSingleJob, {
     job_id: id,
   });
-
-  useEffect(() => {
-    if (isLoaded) fnJob();
-  }, [isLoaded]);
 
   const { loading: loadingHiringStatus, fn: fnHiringStatus } = useFetch(
     updateHiringStatus,
@@ -43,6 +39,10 @@ const JobPage = () => {
     const isOpen = value === "open";
     fnHiringStatus(isOpen).then(() => fnJob());
   };
+
+  useEffect(() => {
+    if (isLoaded) fnJob();
+  }, [isLoaded]);
 
   if (!isLoaded || loadingJob) {
     return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />;
@@ -57,9 +57,10 @@ const JobPage = () => {
         <img src={job?.company?.logo_url} className="h-12" alt={job?.title} />
       </div>
 
-      <div className="flex justify-between ">
+      <div className="flex justify-between">
         <div className="flex gap-2">
-          <MapPinIcon /> {job?.location}
+          <MapPinIcon />
+          {job?.location}
         </div>
         <div className="flex gap-2">
           <Briefcase /> {job?.applications?.length} Applicants
@@ -77,6 +78,8 @@ const JobPage = () => {
         </div>
       </div>
 
+      {/* hiring status */}
+      {loadingHiringStatus && <BarLoader width={"100%"} color="#36d7b7" />}
       {job?.recruiter_id === user?.id && (
         <Select onValueChange={handleStatusChange}>
           <SelectTrigger
@@ -103,8 +106,10 @@ const JobPage = () => {
       </h2>
       <MDEditor.Markdown
         source={job?.requirements}
-        className="bg-transparent sm:text-lg" // add global ul styles - tutorial
+        className="bg-transparent sm:text-lg"
       />
+
+      {/* render applications */}
       {job?.recruiter_id !== user?.id && (
         <ApplyJobDrawer
           job={job}
@@ -113,10 +118,10 @@ const JobPage = () => {
           applied={job?.applications?.find((ap) => ap.candidate_id === user.id)}
         />
       )}
-      {loadingHiringStatus && <BarLoader width={"100%"} color="#36d7b7" />}
+
       {job?.applications?.length > 0 && job?.recruiter_id === user?.id && (
         <div className="flex flex-col gap-2">
-          <h2 className="font-bold mb-4 text-xl ml-1">Applications</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold">Applications</h2>
           {job?.applications.map((application) => {
             return (
               <ApplicationCard key={application.id} application={application} />

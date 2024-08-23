@@ -1,9 +1,5 @@
-import { useEffect, useState } from "react";
-import { useUser } from "@clerk/clerk-react";
-import { State } from "country-state-city";
-import { BarLoader } from "react-spinners";
-import useFetch from "@/hooks/use-fetch";
-
+import { getCompanies } from "@/api/apiCompanies";
+import { getJobs } from "@/api/apiJobs";
 import JobCard from "@/components/job-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,43 +11,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import { getCompanies } from "@/api/apiCompanies";
-import { getJobs } from "@/api/apiJobs";
+import useFetch from "@/hooks/use-fetch";
+import { useUser } from "@clerk/clerk-react";
+import { State } from "country-state-city";
+import { useEffect, useState } from "react";
+import { BarLoader } from "react-spinners";
 
 const JobListing = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [location, setLocation] = useState("");
   const [company_id, setCompany_id] = useState("");
-
   const { isLoaded } = useUser();
 
   const {
-    // loading: loadingCompanies,
-    data: companies,
-    fn: fnCompanies,
-  } = useFetch(getCompanies);
-
-  const {
-    loading: loadingJobs,
-    data: jobs,
     fn: fnJobs,
+    data: jobs,
+    loading: loadingJobs,
   } = useFetch(getJobs, {
     location,
     company_id,
     searchQuery,
   });
 
+  const { fn: fnCompanies, data: companies } = useFetch(getCompanies);
+
   useEffect(() => {
-    if (isLoaded) {
-      fnCompanies();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (isLoaded) fnCompanies();
   }, [isLoaded]);
 
   useEffect(() => {
     if (isLoaded) fnJobs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, location, company_id, searchQuery]);
 
   const handleSearch = (e) => {
@@ -73,19 +62,21 @@ const JobListing = () => {
   }
 
   return (
-    <div className="">
+    <div>
       <h1 className="gradient-title font-extrabold text-6xl sm:text-7xl text-center pb-8">
         Latest Jobs
       </h1>
+
+      {/* Add filters here */}
       <form
         onSubmit={handleSearch}
-        className="h-14 flex flex-row w-full gap-2 items-center mb-3"
+        className="h-14 flex w-full gap-2 items-center mb-3"
       >
         <Input
           type="text"
           placeholder="Search Jobs by Title.."
           name="search-query"
-          className="h-full flex-1  px-4 text-md"
+          className="h-full flex-1 px-4 text-md"
         />
         <Button type="submit" className="h-full sm:w-28" variant="blue">
           Search
@@ -130,9 +121,9 @@ const JobListing = () => {
           </SelectContent>
         </Select>
         <Button
-          className="sm:w-1/2"
-          variant="destructive"
           onClick={clearFilters}
+          variant="destructive"
+          className="sm:w-1/2"
         >
           Clear Filters
         </Button>

@@ -1,19 +1,18 @@
 import supabaseClient, { supabaseUrl } from "@/utils/supabase";
 
-// Fetch Companies
 export async function getCompanies(token) {
   const supabase = await supabaseClient(token);
+
   const { data, error } = await supabase.from("companies").select("*");
 
   if (error) {
-    console.error("Error fetching Companies:", error);
+    console.error("Error Fetching Companies:", error);
     return null;
   }
 
   return data;
 }
 
-// Add Company
 export async function addNewCompany(token, _, companyData) {
   const supabase = await supabaseClient(token);
 
@@ -24,7 +23,10 @@ export async function addNewCompany(token, _, companyData) {
     .from("company-logo")
     .upload(fileName, companyData.logo);
 
-  if (storageError) throw new Error("Error uploading Company Logo");
+  if (storageError) {
+    console.error("Error Uploading Company Logo:", storageError);
+    return null;
+  }
 
   const logo_url = `${supabaseUrl}/storage/v1/object/public/company-logo/${fileName}`;
 
@@ -33,14 +35,14 @@ export async function addNewCompany(token, _, companyData) {
     .insert([
       {
         name: companyData.name,
-        logo_url: logo_url,
+        logo_url,
       },
     ])
     .select();
 
   if (error) {
-    console.error(error);
-    throw new Error("Error submitting Companys");
+    console.error("Error Submitting Company:", error);
+    return null;
   }
 
   return data;

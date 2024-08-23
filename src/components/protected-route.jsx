@@ -1,17 +1,12 @@
 /* eslint-disable react/prop-types */
-import { Navigate, useLocation } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
+import { Navigate, useLocation } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-  const { isSignedIn, isLoaded, user } = useUser();
+  const { isSignedIn, user, isLoaded } = useUser();
   const { pathname } = useLocation();
 
-  // Add loading state
-  if (!isLoaded) {
-    return <div>Loading...</div>; // Or a spinner
-  }
-
-  if (!isSignedIn) {
+  if (isLoaded && !isSignedIn && isSignedIn !== undefined) {
     return <Navigate to="/?sign-in=true" />;
   }
 
@@ -19,9 +14,8 @@ const ProtectedRoute = ({ children }) => {
     user !== undefined &&
     !user?.unsafeMetadata?.role &&
     pathname !== "/onboarding"
-  ) {
+  )
     return <Navigate to="/onboarding" />;
-  }
 
   return children;
 };

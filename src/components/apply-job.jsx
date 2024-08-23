@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -10,14 +9,15 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
+import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import useFetch from "@/hooks/use-fetch";
-import { applyToJob } from "@/api/apiApplication";
+import { applyToJob } from "@/api/apiApplications";
 import { BarLoader } from "react-spinners";
 
 const schema = z.object({
@@ -40,7 +40,7 @@ const schema = z.object({
     ),
 });
 
-export function ApplyJobDrawer({ user, job, fetchJob, applied = false }) {
+const ApplyJobDrawer = ({ user, job, applied = false, fetchJob }) => {
   const {
     register,
     handleSubmit,
@@ -87,7 +87,7 @@ export function ApplyJobDrawer({ user, job, fetchJob, applied = false }) {
           <DrawerTitle>
             Apply for {job?.title} at {job?.company?.name}
           </DrawerTitle>
-          <DrawerDescription>Please Fill the form below</DrawerDescription>
+          <DrawerDescription>Please Fill the form below.</DrawerDescription>
         </DrawerHeader>
 
         <form
@@ -105,6 +105,7 @@ export function ApplyJobDrawer({ user, job, fetchJob, applied = false }) {
           {errors.experience && (
             <p className="text-red-500">{errors.experience.message}</p>
           )}
+
           <Input
             type="text"
             placeholder="Skills (Comma Separated)"
@@ -114,6 +115,7 @@ export function ApplyJobDrawer({ user, job, fetchJob, applied = false }) {
           {errors.skills && (
             <p className="text-red-500">{errors.skills.message}</p>
           )}
+
           <Controller
             name="education"
             control={control}
@@ -137,6 +139,7 @@ export function ApplyJobDrawer({ user, job, fetchJob, applied = false }) {
           {errors.education && (
             <p className="text-red-500">{errors.education.message}</p>
           )}
+
           <Input
             type="file"
             accept=".pdf, .doc, .docx"
@@ -163,4 +166,6 @@ export function ApplyJobDrawer({ user, job, fetchJob, applied = false }) {
       </DrawerContent>
     </Drawer>
   );
-}
+};
+
+export default ApplyJobDrawer;

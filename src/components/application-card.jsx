@@ -7,6 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import useFetch from "@/hooks/use-fetch";
+import { updateApplicationStatus } from "@/api/apiApplications";
+import { BarLoader } from "react-spinners";
 import {
   Select,
   SelectContent,
@@ -14,9 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { updateApplicationStatus } from "@/api/apiApplication";
-import useFetch from "@/hooks/use-fetch";
-import { BarLoader } from "react-spinners";
 
 const ApplicationCard = ({ application, isCandidate = false }) => {
   const handleDownload = () => {
@@ -34,7 +34,7 @@ const ApplicationCard = ({ application, isCandidate = false }) => {
   );
 
   const handleStatusChange = (status) => {
-    fnHiringStatus(status).then(() => fnHiringStatus());
+    fnHiringStatus(status);
   };
 
   return (
@@ -52,6 +52,7 @@ const ApplicationCard = ({ application, isCandidate = false }) => {
           />
         </CardTitle>
       </CardHeader>
+
       <CardContent className="flex flex-col gap-4 flex-1">
         <div className="flex flex-col md:flex-row justify-between">
           <div className="flex gap-2 items-center">
@@ -59,11 +60,11 @@ const ApplicationCard = ({ application, isCandidate = false }) => {
             experience
           </div>
           <div className="flex gap-2 items-center">
-            <School size={15} />
-            {application?.education}
+            <School size={15} /> {application?.education}
           </div>
           <div className="flex gap-2 items-center">
-            <Boxes size={15} /> Skills: {application?.skills}
+            <Boxes size={15} />
+            Skills: {application?.skills}
           </div>
         </div>
         <hr />
@@ -72,7 +73,7 @@ const ApplicationCard = ({ application, isCandidate = false }) => {
         <span>{new Date(application?.created_at).toLocaleString()}</span>
         {isCandidate ? (
           <span className="capitalize font-bold">
-            Status: {application.status}
+            Status: {application?.status}
           </span>
         ) : (
           <Select
