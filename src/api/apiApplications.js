@@ -3,9 +3,14 @@ import supabaseClient, { supabaseUrl } from "@/utils/supabase";
 export async function applyToJob(token, _, jobData) {
   const supabase = await supabaseClient(token);
 
-  const random = Math.floor(Math.random() * 90000);
-  const fileName = `resume-${random}-${jobData.candidate_id}`;
+  if (!jobData.resume || !jobData.candidate_id) {
+    console.error("Missing required job data.");
+    return null;
+  }
 
+  const fileName = `resume-${Date.now()}-${jobData.candidate_id}`;
+
+  // Upload resume
   const { error: storageError } = await supabase.storage
     .from("resumes")
     .upload(fileName, jobData.resume);
@@ -15,8 +20,10 @@ export async function applyToJob(token, _, jobData) {
     return null;
   }
 
+  // Construct resume URL
   const resume = `${supabaseUrl}/storage/v1/object/public/resumes/${fileName}`;
 
+  // Insert application data
   const { data, error } = await supabase
     .from("applications")
     .insert([
@@ -36,6 +43,11 @@ export async function applyToJob(token, _, jobData) {
 }
 
 export async function updateApplicationStatus(token, { job_id }, status) {
+  if (!job_id || !status) {
+    console.error("Missing job_id or status.");
+    return null;
+  }
+
   const supabase = await supabaseClient(token);
 
   const { data, error } = await supabase
@@ -52,7 +64,14 @@ export async function updateApplicationStatus(token, { job_id }, status) {
   return data;
 }
 
+
+
 export async function getApplications(token, { user_id }) {
+  if (!user_id) {
+    console.error("Missing user_id.");
+    return null;
+  }
+
   const supabase = await supabaseClient(token);
 
   const { data, error } = await supabase
