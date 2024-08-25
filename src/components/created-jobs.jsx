@@ -28,7 +28,7 @@ const CreatedJobs = () => {
     <div>
       <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {createdJobs?.length ? (
-          createdJobs.map((job) => {
+          createdJobs?.map((job) => {
             return (
               <JobCard
                 key={job.id}
